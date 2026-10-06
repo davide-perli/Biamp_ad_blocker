@@ -2,6 +2,8 @@
 
 > Adware-Malware Blocker compatible with manifest V3 rule-based and static, meaning it won't send data anywhere using [StevenBlack/hosts](https://raw.githubusercontent.com/StevenBlack/hosts/refs/heads/master/hosts) hosts in order to block ads.
 
+> Fun fact BIAMP comes from Berry Inside A Mouse Pointer (not joking it just came completely random to mind).
+
 ![Json](https://img.shields.io/badge/Json-yellow.svg)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)
 ![License](https://img.shields.io/badge/License-Apache2.0-red.svg)
