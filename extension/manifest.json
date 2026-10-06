@@ -1,7 +1,7 @@
 {
     "name": "Biamp Ad Blocker",
     "version": "1.5",
-    "description": "Adware-malware blocker for Chromium-based browsers. Details and source code available at https://github.com/davide-perli/Biamp_ad_blocker.",
+    "description": "DNS adware-malware blocker. Details and source code available at https://github.com/davide-perli/Biamp_ad_blocker.",
     "permissions": ["declarativeNetRequest","declarativeNetRequestWithHostAccess"],
     "host_permissions": ["<all_urls>"],
     "declarative_net_request": {
