@@ -4,6 +4,8 @@
 
 > Fun fact BIAMP comes from Berry Inside A Mouse Pointer (not joking it just came completely random to mind).
 
+> Credits for the design of the logo for the extension go to [Andra Alexandrescu](https://github.com/andialexandrescu). Consider following her on Github.
+
 ![Json](https://img.shields.io/badge/Json-yellow.svg)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)
 ![License](https://img.shields.io/badge/License-Apache2.0-red.svg)
