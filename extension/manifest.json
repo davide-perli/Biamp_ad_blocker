@@ -1,7 +1,7 @@
 {
-    "name": "David's Ad Blocker",
-    "version": "1.4",
-    "description": "A powerful ad blocker for Chromium-based browsers.",
+    "name": "Biamp Ad Blocker",
+    "version": "1.5",
+    "description": "Adware-malware blocker for Chromium-based browsers. Details and source code available at https://github.com/davide-perli/Biamp_ad_blocker. Contact email: perlidavide@gmail.com",
     "permissions": ["declarativeNetRequest","declarativeNetRequestWithHostAccess"],
     "host_permissions": ["<all_urls>"],
     "declarative_net_request": {
@@ -19,7 +19,8 @@
     "icons": {
         "16": "icons/logo_16x16.png",
         "48": "icons/logo_48x48.png",
-        "128": "icons/logo_128x128.png"
+        "128": "icons/logo_128x128.png",
+        "256": "icons/logo_256x256.png"
     },
     "manifest_version": 3
 }
