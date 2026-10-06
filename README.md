@@ -26,7 +26,7 @@ This extension is meant to block ads according to the new manifest V3. It works 
 graph TD;
     A[data_fetcher.py] --> B[ad-domains.txt];
     B --> C[rules_creator.py];
-    C --> D[rules_{number}.json];
+    C --> D[rules_*.json];
     D --> E[manifest.json];
 ```
 
