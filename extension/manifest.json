@@ -1,0 +1,25 @@
+{
+    "name": "David's Ad Blocker",
+    "version": "1.4",
+    "description": "A powerful ad blocker for Chromium-based browsers.",
+    "permissions": ["declarativeNetRequest","declarativeNetRequestWithHostAccess"],
+    "host_permissions": ["<all_urls>"],
+    "declarative_net_request": {
+        "rule_resources": [
+            { "id": "rules_1", "enabled": true, "path": "rules_1.json" },
+            { "id": "rules_2", "enabled": true, "path": "rules_2.json" },
+            { "id": "rules_3", "enabled": true, "path": "rules_3.json" },
+            { "id": "rules_4", "enabled": true, "path": "rules_4.json" },
+            { "id": "rules_5", "enabled": true, "path": "rules_5.json" },
+            { "id": "rules_6", "enabled": true, "path": "rules_6.json" },
+            { "id": "rules_7", "enabled": true, "path": "rules_7.json" },
+            { "id": "rules_8", "enabled": true, "path": "rules_8.json" }
+        ]
+    },
+    "icons": {
+        "16": "icons/logo_16x16.png",
+        "48": "icons/logo_48x48.png",
+        "128": "icons/logo_128x128.png"
+    },
+    "manifest_version": 3
+}
