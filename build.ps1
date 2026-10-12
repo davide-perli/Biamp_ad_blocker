@@ -21,27 +21,124 @@ function Remove-GeneratedRules([string]$directory) {
         Remove-Item -Force
 }
 
-function Update-ManifestRules([string]$directory) {
+function Ensure-Manifest([string]$directory, [switch]$Firefox) {
+    $directoryPath = Join-Path $root $directory
+    $manifestPath = Join-Path $directoryPath "manifest.json"
+
+    if (Test-Path $manifestPath) {
+        return
+    }
+
+    $rules = @(Get-ChildItem -Path $directoryPath -Filter "rules_*.json" -File |
+        Sort-Object { [int]($_.BaseName -replace "rules_", "") })
+
+    if ($rules.Count -eq 0) {
+        throw "No generated rule files found for $manifestPath"
+    }
+
+    $ruleResources = ($rules | ForEach-Object {
+        '            {"id":  "' + $_.BaseName + '", "enabled":  true, "path":  "' + $_.Name + '"}'
+    }) -join ",`r`n"
+
+    if ($Firefox) {
+        $manifest = @"
+{
+    "name":  "Biamp Ad Blocker",
+    "version":  "1.7",
+    "description":  "DNS adware-malware blocker. Details and source code available at https://github.com/davide-perli/Biamp_ad_blocker.",
+    "permissions":  ["declarativeNetRequest"],
+    "host_permissions":  ["<all_urls>"],
+    "browser_specific_settings":  {
+        "gecko":  {
+            "id":  "davide-ad-blocker@biamp",
+            "strict_min_version":  "142.0",
+            "data_collection_permissions":  {"required":  ["none"]}
+        }
+    },
+    "declarative_net_request":  {
+        "rule_resources":  [
+$ruleResources
+        ]
+    },
+    "icons":  {
+        "16":   "icons/logo_16x16.png",
+        "32":   "icons/logo_32x32.png",
+        "48":   "icons/logo_48x48.png",
+        "96":   "icons/logo_96x96.png",
+        "128":  "icons/logo_128x128.png"
+    },
+    "action": {
+        "default_icon": {
+            "16": "icons/logo_16x16.png",
+            "32": "icons/logo_32x32.png"
+        },
+        "default_title": "Biamp Ad Blocker"
+    },
+    "manifest_version":  3
+}
+"@
+    } else {
+        $manifest = @"
+{
+    "name":  "Biamp Ad Blocker",
+    "version":  "1.7",
+    "description":  "DNS adware-malware blocker. Details and source code available at https://github.com/davide-perli/Biamp_ad_blocker.",
+    "permissions":  ["declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
+    "host_permissions":  ["<all_urls>"],
+    "declarative_net_request":  {
+        "rule_resources":  [
+$ruleResources
+        ]
+    },
+    "icons":  {
+        "16":  "icons/logo_16x16.png",
+        "32":  "icons/logo_32x32.png",
+        "48":  "icons/logo_48x48.png",
+        "128": "icons/logo_128x128.png"
+    },
+    "action": {
+        "default_icon": {
+            "16": "icons/logo_16x16.png",
+            "32": "icons/logo_32x32.png"
+        },
+        "default_title": "Biamp Ad Blocker"
+    },
+    "manifest_version":  3
+}
+"@
+    }
+
+    Set-Content -Path $manifestPath -Value $manifest -Encoding utf8
+}
+
+function Validate-ManifestRules([string]$directory) {
     $directoryPath = Join-Path $root $directory
     $manifestPath = Join-Path $directoryPath "manifest.json"
     $manifest = Get-Content -Raw $manifestPath | ConvertFrom-Json
     $rules = @(Get-ChildItem -Path $directoryPath -Filter "rules_*.json" -File |
         Sort-Object { [int]($_.BaseName -replace "rules_", "") })
+    $manifestRules = @($manifest.declarative_net_request.rule_resources)
 
     if ($rules.Count -eq 0) {
         throw "No generated rule files found in $directoryPath"
     }
 
-    $manifest.declarative_net_request.rule_resources = @(
-        foreach ($rule in $rules) {
-            [PSCustomObject]@{
-                id = $rule.BaseName
-                enabled = $true
-                path = $rule.Name
-            }
+    if ($manifestRules.Count -ne $rules.Count) {
+        throw "Manifest rule count does not match generated rule count in $directoryPath"
+    }
+
+    for ($index = 0; $index -lt $rules.Count; $index++) {
+        $manifestRule = $manifestRules[$index]
+        $generatedRule = $rules[$index]
+
+        if (
+            $manifestRule.id -ne $generatedRule.BaseName -or
+            $manifestRule.enabled -ne $true -or
+            $manifestRule.path -ne $generatedRule.Name
+        ) {
+            throw "Manifest rule resource does not match generated rule $($generatedRule.Name) in $directoryPath"
         }
-    )
-    $manifest | ConvertTo-Json -Depth 10 | Set-Content -Encoding utf8 $manifestPath
+    }
 }
 
 function Invoke-PythonScript([string]$script) {
@@ -68,8 +165,10 @@ Remove-GeneratedRules "firefox-extension"
 Invoke-PythonScript "data_fetcher.py"
 Invoke-PythonScript "rules_creator.py"
 Invoke-PythonScript "rules_creator_firefox.py"
-Update-ManifestRules "chromium-extension"
-Update-ManifestRules "firefox-extension"
+Ensure-Manifest "chromium-extension"
+Ensure-Manifest "firefox-extension" -Firefox
+Validate-ManifestRules "chromium-extension"
+Validate-ManifestRules "firefox-extension"
 
 if (-not $SkipFirefoxLint) {
     & web-ext lint --source-dir (Join-Path $root "firefox-extension")
