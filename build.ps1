@@ -63,22 +63,22 @@ function New-ExtensionArchive([string]$directory, [string]$archiveName) {
     }
 }
 
-Remove-GeneratedRules "extension"
-Remove-GeneratedRules "firefox_extension"
+Remove-GeneratedRules "chromium-extension"
+Remove-GeneratedRules "firefox-extension"
 Invoke-PythonScript "data_fetcher.py"
 Invoke-PythonScript "rules_creator.py"
 Invoke-PythonScript "rules_creator_firefox.py"
-Update-ManifestRules "extension"
-Update-ManifestRules "firefox_extension"
+Update-ManifestRules "chromium-extension"
+Update-ManifestRules "firefox-extension"
 
 if (-not $SkipFirefoxLint) {
-    & web-ext lint --source-dir (Join-Path $root "firefox_extension")
+    & web-ext lint --source-dir (Join-Path $root "firefox-extension")
     if ($LASTEXITCODE -ne 0) {
         throw "Firefox lint failed with exit code $LASTEXITCODE"
     }
 }
 
-New-ExtensionArchive "extension" "chromium-extension.zip"
-New-ExtensionArchive "firefox_extension" "firefox-extension.zip"
+New-ExtensionArchive "chromium-extension" "chromium-extension.zip"
+New-ExtensionArchive "firefox-extension" "firefox-extension.zip"
 
 Write-Host "Built chromium-extension.zip and firefox-extension.zip"

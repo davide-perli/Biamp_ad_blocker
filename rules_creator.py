@@ -29,7 +29,7 @@ for file_idx in range(file_count):
             }
         }
         rules.append(rule)
-    filename = f"extension/rules_{file_idx + 1}.json"
+    filename = f"chromium-extension/rules_{file_idx + 1}.json"
     with open(filename, "w") as out:
         json.dump(rules, out, indent=2)
     print(f"Wrote {len(rules)} rules to {filename}")
