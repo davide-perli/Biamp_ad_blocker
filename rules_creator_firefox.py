@@ -35,4 +35,4 @@ for file_idx in range(file_count):
     print(f"Wrote {len(rules)} rules to {filename}")
 
 # Run this for compression to zip file since here instead of path\to\file is path/to/file
-# .\req_libraries\Scripts\python.exe -c "import zipfile; from pathlib import Path; root=Path('firefox_extension'); out=Path('firefox-extension.zip'); files=[p for p in root.rglob('*') if p.is_file() and '_metadata' not in p.parts]; z=zipfile.ZipFile(out, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9); [z.write(p, p.relative_to(root).as_posix()) for p in files]; z.close()"
+# .\req_libraries\Scripts\python.exe -c "import zipfile; from pathlib import Path; root=Path('firefox-extension'); out=Path('firefox-extension.zip'); files=[p for p in root.rglob('*') if p.is_file() and '_metadata' not in p.parts]; z=zipfile.ZipFile(out, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9); [z.write(p, p.relative_to(root).as_posix()) for p in files]; z.close()"
